@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Script Load</title>
+</head>
+<body>
+    <script>
+        console.log("HTML loaded.");
+    </script>
+    <script src="/script.js"></script>
+    <script>
+        console.log("Script tag processed.");
+        if (typeof generateStudyPlan === 'function') {
+            console.log("generateStudyPlan is defined!");
+        } else {
+            console.log("generateStudyPlan is NOT defined!");
+        }
+    </script>
+</body>
+</html>

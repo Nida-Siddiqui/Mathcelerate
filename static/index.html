@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Math Study Planner</title>
+</head>
+<body>
+    <h1>Math Study Planner</h1>
+
+    <div id="studyPlanForm">
+        <h2>Study Plan</h2>
+        <label for="gradeLevel">Grade Level:</label>
+        <input type="number" id="gradeLevel"><br><br>
+        <label for="weakTopics">Weak Topics (comma-separated):</label>
+        <input type="text" id="weakTopics"><br><br>
+        <label for="availableHours">Available Hours:</label>
+        <input type="number" id="availableHours"><br><br>
+        <button onclick="generateStudyPlan()">Generate Study Plan</button><br><br>
+        <div id="studyPlanResult"></div>
+    </div>
+
+    <div id="questionForm">
+        <h2>Practice Questions</h2>
+        <label for="topic">Topic:</label>
+        <input type="text" id="topic"><br><br>
+        <label for="difficulty">Difficulty:</label>
+        <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select><br><br>
+        <label for="previousMistakes">Previous Mistakes (comma-separated):</label>
+        <input type="text" id="previousMistakes"><br><br>
+        <button onclick="generateQuestions()">Generate Questions</button><br><br>
+        <div id="questionResult"></div>
+    </div>
+
+    <div id="conceptForm">
+        <h2>Concept Explanation</h2>
+        <label for="conceptTopic">Topic:</label>
+        <input type="text" id="conceptTopic"><br><br>
+        <label for="conceptMistakes">Mistakes (comma separated):</label>
+        <input type="text" id="conceptMistakes"><br><br>
+        <button onclick="explainConcept()">Explain Concept</button><br><br>
+        <div id="conceptResult"></div>
+    </div>
+
+    <div id="resourceForm">
+        <h2>Learning Resources</h2>
+        <label for="resourceTopic">Topic:</label>
+        <input type="text" id="resourceTopic"><br><br>
+        <label for="mistakeCount">Mistake Count:</label>
+        <input type="number" id="mistakeCount"><br><br>
+        <button onclick="reinforceResources()">Get Resources</button><br><br>
+        <div id="resourceResult"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
