@@ -162,4 +162,8 @@ with col2:
 
     st.markdown("<h2 class='big-font'>Additional Learning Resources</h2>", unsafe_allow_html=True)
     with st.container(border=True):
+<<<<<<< HEAD
         resource_topic = st.text_input("Enter a math topic")
+=======
+        resource_topic = st.text_input("Enter a math topic")
+>>>>>>> 0e5afdd49e598b960e7054d32c02c1bd96628efa
