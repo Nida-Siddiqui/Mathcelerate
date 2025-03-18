@@ -4,15 +4,10 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
-# Retrieve the OpenAI API key from the environment variables
+# Initialize OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
-# --- API Key Validation ---
-if openai.api_key is None:
-    st.error("OpenAI API key not found. Please create a .env file with OPENAI_API_KEY=<your_api_key>")
-    st.stop()  # Stop execution if API key is missing
 
 # --- Function Definitions ---
 def generate_math_study_plan(grade_level, weak_topics, available_hours):
@@ -33,10 +28,10 @@ def generate_math_study_plan(grade_level, weak_topics, available_hours):
         return response.choices[0].message.content
     except openai.AuthenticationError as e:
         st.error(f"OpenAI Authentication Error: {e}")
-        return None  # Indicate failure
+        return None
     except Exception as e:
         st.error(f"An error occurred: {e}")
-        return None  # Indicate failure
+        return None
 
 def generate_adaptive_questions(topic, difficulty, previous_mistakes):
     """Generates 5 adaptive math practice questions."""
@@ -93,62 +88,78 @@ def reinforce_concept_with_resources(topic, mistake_count):
         return None
 
 # --- Streamlit UI ---
-st.title("Math Study Planner")
+st.set_page_config(page_title="Math Study Planner", layout="wide")
 
-# Study Plan Generator
-st.header("Generate Study Plan")
-grade_level = st.number_input("Enter your grade level (e.g., 6, 7, 8):", min_value=1, step=1)
-weak_topics = st.text_input("Enter weak math topics (comma-separated):")
-available_hours = st.number_input("Enter available study hours per day:", min_value=1, step=1)
+# Custom CSS for styling
+st.markdown(
+    """
+    <style>
+    .big-font { font-size: 30px !important; font-weight: bold; }
+    .stTextInput > div > div > input { border: 2px solid #4CAF50; border-radius: 5px; padding: 10px; }
+    .stNumberInput > div > div > input { border: 2px solid #4CAF50; border-radius: 5px; padding: 10px; }
+    .stSelectbox > div > div > div { border: 2px solid #4CAF50; border-radius: 5px; padding: 10px; }
+    .stButton > button { background-color: #4CAF50; color: white; padding: 14px 20px; border: none; border-radius: 5px; cursor: pointer; }
+    .stButton > button:hover { background-color: #3e8e41; }
+    .stTextArea > div > div > textarea { border: 2px solid #4CAF50; border-radius: 5px; padding: 10px; }
+    .st-expander { border: 1px solid #4CAF50; border-radius: 5px; padding: 10px; margin-bottom: 10px; }
+    .centered-header { text-align: center; color: #4CAF50; }
+    .input-section { margin-bottom: 20px; }
+    .output-section { margin-top: 20px; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
-if st.button("Generate Study Plan"):
-    if grade_level and weak_topics and available_hours:
-        study_plan = generate_math_study_plan(grade_level, weak_topics, available_hours)
-        if study_plan:  # Only display if plan was generated
-            st.subheader("Study Plan:")
-            st.write(study_plan)
-    else:
-        st.warning("Please fill in all fields.")
+st.markdown("<h1 class='centered-header'>Math Study Planner</h1>", unsafe_allow_html=True)
 
-# Adaptive Questions Generator
-st.header("Adaptive Practice Questions")
-topic = st.text_input("Enter a math topic for practice questions:")
-difficulty = st.selectbox("Select difficulty level:", ["easy", "medium", "hard"])
-previous_mistakes = st.text_input("List common mistakes you've made (comma-separated):")
+col1, col2 = st.columns(2)
 
-if st.button("Generate Questions"):
-    if topic and difficulty and previous_mistakes:
-        questions = generate_adaptive_questions(topic, difficulty, previous_mistakes)
-        if questions: # Only display if questions were generated
-            st.subheader("Practice Questions:")
-            st.write(questions)
-    else:
-        st.warning("Please fill in all fields.")
+with col1:
+    st.markdown("<h2 class='big-font'>Generate Study Plan</h2>", unsafe_allow_html=True)
+    with st.container(border=True):
+        grade_level = st.number_input("Enter your grade level:", min_value=1, step=1)
+        weak_topics = st.text_input("Enter weak math topics (comma-separated):")
+        available_hours = st.number_input("Enter available study hours per day:", min_value=1, step=1)
 
-# Concept Explanation
-st.header("Concept Explanation")
-concept_topic = st.text_input("Enter a math topic for explanation:")
-concept_mistakes = st.text_input("List common mistakes (comma-separated):")
+        if st.button("Generate Study Plan"):
+            if grade_level and weak_topics and available_hours:
+                study_plan = generate_math_study_plan(grade_level, weak_topics, available_hours)
+                if study_plan:
+                    st.markdown("<h3 class='centered-header'>Study Plan:</h3>", unsafe_allow_html=True)
+                    st.write(study_plan)
+            else:
+                st.warning("Please fill in all fields.")
 
-if st.button("Explain Concept"):
-    if concept_topic and concept_mistakes:
-        explanation = explain_math_concept(concept_topic, concept_mistakes)
-        if explanation: # Only display if explanation was generated
-            st.subheader("Concept Explanation:")
-            st.write(explanation)
-    else:
-        st.warning("Please fill in all fields.")
+    st.markdown("<h2 class='big-font'>Adaptive Practice Questions</h2>", unsafe_allow_html=True)
+    with st.container(border=True):
+        topic = st.text_input("Enter a math topic for practice questions:")
+        difficulty = st.selectbox("Select difficulty level:", ["easy", "medium", "hard"])
+        previous_mistakes = st.text_input("List common mistakes you've made (comma-separated):")
 
-# Reinforce with Resources
-st.header("Additional Learning Resources")
-resource_topic = st.text_input("Enter a math topic:")
-mistake_count = st.number_input("How many times have you struggled with this topic?", min_value=0, step=1)
+        if st.button("Generate Questions"):
+            if topic and difficulty and previous_mistakes:
+                questions = generate_adaptive_questions(topic, difficulty, previous_mistakes)
+                if questions:
+                    st.markdown("<h3 class='centered-header'>Practice Questions:</h3>", unsafe_allow_html=True)
+                    st.write(questions)
+            else:
+                st.warning("Please fill in all fields.")
 
-if st.button("Get Resources"):
-    if resource_topic is not None:
-        resources = reinforce_concept_with_resources(resource_topic, mistake_count)
-        if resources: # Only display if resources were generated
-            st.subheader("Resources:")
-            st.write(resources)
-    else:
-        st.warning("Please enter a topic.")
+with col2:
+    st.markdown("<h2 class='big-font'>Concept Explanation</h2>", unsafe_allow_html=True)
+    with st.container(border=True):
+        concept_topic = st.text_input("Enter a math topic for explanation:")
+        concept_mistakes = st.text_input("List common mistakes (comma-separated):")
+
+        if st.button("Explain Concept"):
+            if concept_topic and concept_mistakes:
+                explanation = explain_math_concept(concept_topic, concept_mistakes)
+                if explanation:
+                    st.markdown("<h3 class='centered-header'>Concept Explanation:</h3>", unsafe_allow_html=True)
+                    st.write(explanation)
+            else:
+                st.warning("Please fill in all fields.")
+
+    st.markdown("<h2 class='big-font'>Additional Learning Resources</h2>", unsafe_allow_html=True)
+    with st.container(border=True):
+        resource_topic = st.text_input("Enter a math topic")
