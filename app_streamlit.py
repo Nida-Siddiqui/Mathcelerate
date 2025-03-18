@@ -12,15 +12,12 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
+
 # This will print to your Streamlit Cloud logs
 
 print(f"Before API Key assignment: openai.api_key is: {openai.api_key}")
 
-
-
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
-
 
 print(f"After API Key assignment: openai.api_key is: {openai.api_key}")
 
@@ -29,22 +26,14 @@ print(f"After API Key assignment: openai.api_key is: {openai.api_key}")
 # --- Function Definitions ---
 
 def generate_math_study_plan(grade_level, weak_topics, available_hours):
-
-    """Generates a personalized 7-day math study plan."""
-
-    prompt = f"""
-
-    Create a personalized 7-day math study plan for a student.
-
-    Grade Level: {grade_level}
-
-    Weak Topics: {weak_topics}
-
-    Available Study Hours per Day: {available_hours}
-
-    Focus on step-by-step explanations and adaptive practice.
-
-    """
+    """Generates a personalized 7-day math study plan.""" #corrected line.
+    prompt = f"""
+    Create a personalized 7-day math study plan for a student.
+    Grade Level: {grade_level}
+    Weak Topics: {weak_topics}
+    Available Study Hours per Day: {available_hours}
+    Focus on step-by-step explanations and adaptive practice.
+    """
 
     try:
 
