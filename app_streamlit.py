@@ -6,12 +6,30 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv(override=True)
 
+<<<<<<< HEAD
 # Initialize OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+=======
+
+# This will print to your Streamlit Cloud logs
+
+print(f"Before API Key assignment: openai.api_key is: {openai.api_key}")
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+print(f"After API Key assignment: openai.api_key is: {openai.api_key}")
+
+
+
+>>>>>>> 68773df (Initial commit)
 # --- Function Definitions ---
 def generate_math_study_plan(grade_level, weak_topics, available_hours):
+<<<<<<< HEAD
     """Generates a personalized 7-day math study plan."""
+=======
+    """Generates a personalized 7-day math study plan.""" #corrected line.
+>>>>>>> 68773df (Initial commit)
     prompt = f"""
     Create a personalized 7-day math study plan for a student.
     Grade Level: {grade_level}
@@ -19,6 +37,7 @@ def generate_math_study_plan(grade_level, weak_topics, available_hours):
     Available Study Hours per Day: {available_hours}
     Focus on step-by-step explanations and adaptive practice.
     """
+<<<<<<< HEAD
     try:
         response = openai.chat.completions.create(
             model="gpt-4",
@@ -32,6 +51,36 @@ def generate_math_study_plan(grade_level, weak_topics, available_hours):
     except Exception as e:
         st.error(f"An error occurred: {e}")
         return None
+=======
+
+    try:
+
+        response = openai.chat.completions.create(
+
+            model="gpt-4",
+
+            messages=[{"role": "system", "content": "You are an expert math tutor."},
+
+                      {"role": "user", "content": prompt}]
+
+        )
+
+        return response.choices[0].message.content
+
+    except openai.AuthenticationError as e:
+
+        st.error(f"OpenAI Authentication Error: {e}")
+
+        return None  # Indicate failure
+
+    except Exception as e:
+
+        st.error(f"An error occurred: {e}")
+
+        return None  # Indicate failure
+
+
+>>>>>>> 68773df (Initial commit)
 
 def generate_adaptive_questions(topic, difficulty, previous_mistakes):
     """Generates 5 adaptive math practice questions."""
